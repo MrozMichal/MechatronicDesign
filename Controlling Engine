@@ -98,8 +98,6 @@ void loop() {
     delay(3000);
   }  
   
-  
-
   // Ustawienia wyswietlacza LCD
   lcd.setCursor(0, 1);
   lcd.print(buttonPushCounter);
