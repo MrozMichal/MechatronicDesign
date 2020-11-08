@@ -1,0 +1,58 @@
+String odebraneDane = "";
+char opcja;
+int liczba1, liczba2;
+float wynik;
+char dzialanie;
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+}
+
+
+void loop() {
+  Serial.print("Podaj pierwsza liczbe: ");
+  while(Serial.available() == 0){}
+  odebraneDane = Serial.readStringUntil('\n');
+  liczba1 = odebraneDane.toInt();
+  Serial.println(liczba1);
+  Serial.print("Podaj druga liczbe: ");
+  while(Serial.available() == 0){}
+  odebraneDane = Serial.readStringUntil('\n');
+  liczba2 = odebraneDane.toInt();
+  Serial.println(liczba2);
+  Serial.println("Wybierz dzialanie do wykoannia: \n dodawanie: +\n odejmowanie: - \n mnozenie: *\n dzielenie: /\n ");
+  while(Serial.available() == 0){}
+  odebraneDane = Serial.readStringUntil('\n');
+  opcja = odebraneDane[0];
+    Serial.print("Dzialanie: ");
+    Serial.print(liczba1);
+    Serial.print(opcja);
+    Serial.print(liczba2);
+    Serial.print(" = ");
+  switch (opcja){
+    
+    case '+': 
+      wynik = liczba1 + liczba2;
+      Serial.println(wynik);
+    break;
+
+    case '-': 
+      wynik = liczba1 - liczba2;
+      Serial.println(wynik);
+    break;
+
+    case '*': 
+      wynik = liczba1 * liczba2;
+      Serial.println(wynik);
+    break;
+
+    case '/': 
+      if(liczba2 == 0)
+        Serial.println("Nie dziel przez 0!!!");
+      else{
+        wynik = float(liczba1) / float(liczba2);
+        Serial.println(wynik);
+      }
+    break;
+  }
+}
