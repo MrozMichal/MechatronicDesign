@@ -1,8 +1,10 @@
-int inches = 0;		    //odleglosc w calach (punk wyzszy 1)
-int cm = 0;			      //odleglosc w cm (punk nizszy 2)
-int odleglosc = 0 ;	  //odleglosc calkowita
-int pozycja = 0;
-
+int inches = 0;			//odleglosc w calach
+int cm = 0;				//odleglosc w cm
+int odleglosc = 0 ;		//odleglosc calkowita
+int pozycja = 0;		//pozycja obiektu
+int MAXpredkosc = 0;	//predkosc maksymalna
+int MINpredkosc = 0;	//predkosc minimalna
+int predkosc = 0;
 
 long readUltrasonicDistance(int triggerPin, int echoPin)
 {
@@ -19,9 +21,9 @@ long readUltrasonicDistance(int triggerPin, int echoPin)
 void setup()
 {
   
-  pinMode(8, OUTPUT);		  //wyjscie dla sygnalu PWM
+  pinMode(8, OUTPUT);		//wyjscie dla sygnalu PWM
   digitalWrite(8, HIGH);	//aktywnosc silnika jest ciagla
-  pinMode(9, OUTPUT);		  //wyjscie dla zasilania PRZÓD
+  pinMode(9, OUTPUT);		//wyjscie dla zasilania PRZÓD
   pinMode(10, OUTPUT);		//wyjscie dla zasilania TYŁ
   Serial.begin(9600);
 
@@ -41,29 +43,60 @@ void loop()
   Serial.print("cm, ");	//wartosc w centymetrach
   delay(100); // Wait for 100 millisecond(s)
   
-  
-  
-  
-  
   //Pozycjonowanie i regulacja
   odleglosc = cm - pozycja;
   Serial.print(odleglosc);
   Serial.println(" to odleglosc.");
   if(odleglosc > 0)
   {
-    analogWrite(8, 255);
-    digitalWrite(9, HIGH);	//jazda silnikiem do przodu
-    pozycja += 1;
-    Serial.print(odleglosc);
+    //zmiana prędkości dla wartości dodatnich (jazda na przód)
+    
+    if(odleglosc > 100)
+    {
+      pozycja += 20;  
+      predkosc = MAXpredkosc;	//predkość w zależności od odległości X %
+    }
+    else if(odleglosc < 20)
+    {
+      pozycja += 1;
+      predkosc = MINpredkosc;					//prędkość 100%
+    }
+    else
+    {
+      pozycja += 20*(predkosc/260);
+      predkosc = MINpredkosc + (MINpredkosc * odleglosc);
+    }
+	
+    analogWrite(8, predkosc); 	//Prędkość obrotów
+    digitalWrite(9, HIGH);		//jazda silnikiem do przodu
     digitalWrite(10, LOW);
+    
   }
   else if(odleglosc < 0)
   {
-    analogWrite(8, -255);
-    digitalWrite(10, HIGH);	//jazda silnikiem do tylu
-    pozycja -= 1;
-    Serial.print(odleglosc);
-    digitalWrite(9, HIGH);
+        
+    //zmiana prędkości dla wartości ujemnych (cofanie)
+    
+    if(odleglosc < -100)
+    {
+      pozycja -= 20;  
+      predkosc = -MAXpredkosc;	//predkość w zależności od odległości X %
+    }
+    else if(odleglosc > -20)
+    {
+      pozycja -= 1;
+      predkosc = -MINpredkosc;	//prędkość 100%
+    }
+    else
+    {
+      pozycja -= 20*(-predkosc/260);
+      predkosc = -MINpredkosc + (MINpredkosc * odleglosc);
+    }
+	
+    analogWrite(8, predkosc); 	//Prędkość obrotów
+    digitalWrite(9, LOW);		//jazda silnikiem do przodu
+    digitalWrite(10, HIGH);
+        
   }
   else
   {
