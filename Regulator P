@@ -1,9 +1,9 @@
 int inches = 0;			//odleglosc w calach
-int cm = 0;				//odleglosc w cm
+int cm = 0;			//odleglosc w cm
 int odleglosc = 0 ;		//odleglosc calkowita
 int pozycja = 0;		//pozycja obiektu
-int MAXpredkosc = 0;	//predkosc maksymalna
-int MINpredkosc = 0;	//predkosc minimalna
+int MAXpredkosc = 0;		//predkosc maksymalna
+int MINpredkosc = 0;		//predkosc minimalna
 int predkosc = 0;
 
 long readUltrasonicDistance(int triggerPin, int echoPin)
@@ -54,21 +54,21 @@ void loop()
     if(odleglosc > 100)
     {
       pozycja += 20;  
-      predkosc = MAXpredkosc;	//predkość w zależności od odległości X %
+      predkosc = MAXpredkosc;					//predkość maksymalna
     }
     else if(odleglosc < 20)
     {
       pozycja += 1;
-      predkosc = MINpredkosc;					//prędkość 100%
+      predkosc = MINpredkosc;					//prędkość minimalna
     }
     else
     {
       pozycja += 20*(predkosc/260);
-      predkosc = MINpredkosc + (MINpredkosc * odleglosc);
+      predkosc = MINpredkosc + (MINpredkosc * odleglosc);	//prędkość w zależności od odległości
     }
 	
-    analogWrite(8, predkosc); 	//Prędkość obrotów
-    digitalWrite(9, HIGH);		//jazda silnikiem do przodu
+    analogWrite(8, predkosc); 					//Prędkość obrotów (silnik działa w przedziale od 130 do 260)
+    digitalWrite(9, HIGH);					//jazda silnikiem do przodu
     digitalWrite(10, LOW);
     
   }
@@ -80,21 +80,21 @@ void loop()
     if(odleglosc < -100)
     {
       pozycja -= 20;  
-      predkosc = -MAXpredkosc;	//predkość w zależności od odległości X %
+      predkosc = -MAXpredkosc;					//predkość maksymalna
     }
     else if(odleglosc > -20)
     {
       pozycja -= 1;
-      predkosc = -MINpredkosc;	//prędkość 100%
+      predkosc = -MINpredkosc;					//prędkość minimalna
     }
     else
     {
       pozycja -= 20*(-predkosc/260);
-      predkosc = -MINpredkosc + (MINpredkosc * odleglosc);
+      predkosc = -MINpredkosc + (MINpredkosc * odleglosc);	//prędkość w zależności od odległości
     }
 	
-    analogWrite(8, predkosc); 	//Prędkość obrotów
-    digitalWrite(9, LOW);		//jazda silnikiem do przodu
+    analogWrite(8, predkosc); 					//Prędkość obrotów (silnik działa w przedziale od 130 do 260)
+    digitalWrite(9, LOW);					//jazda silnikiem do tyłu
     digitalWrite(10, HIGH);
         
   }
