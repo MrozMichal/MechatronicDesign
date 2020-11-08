@@ -1,6 +1,6 @@
-int inches = 0;		//odleglosc w calach (punk wyzszy 1)
-int cm = 0;			//odleglosc w cm (punk nizszy 2)
-int odleglosc = 0 ;	//odleglosc calkowita
+int inches = 0;		    //odleglosc w calach (punk wyzszy 1)
+int cm = 0;			      //odleglosc w cm (punk nizszy 2)
+int odleglosc = 0 ;	  //odleglosc calkowita
 int pozycja = 0;
 
 
@@ -19,9 +19,9 @@ long readUltrasonicDistance(int triggerPin, int echoPin)
 void setup()
 {
   
-  pinMode(8, OUTPUT);		//wyjscie dla sygnalu PWM
+  pinMode(8, OUTPUT);		  //wyjscie dla sygnalu PWM
   digitalWrite(8, HIGH);	//aktywnosc silnika jest ciagla
-  pinMode(9, OUTPUT);		//wyjscie dla zasilania PRZÓD
+  pinMode(9, OUTPUT);		  //wyjscie dla zasilania PRZÓD
   pinMode(10, OUTPUT);		//wyjscie dla zasilania TYŁ
   Serial.begin(9600);
 
