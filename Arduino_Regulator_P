@@ -1,0 +1,75 @@
+int inches = 0;		//odleglosc w calach (punk wyzszy 1)
+int cm = 0;			//odleglosc w cm (punk nizszy 2)
+int odleglosc = 0 ;	//odleglosc calkowita
+int pozycja = 0;
+
+
+long readUltrasonicDistance(int triggerPin, int echoPin)
+{
+  pinMode(triggerPin, OUTPUT);  	// Clear the trigger
+  digitalWrite(triggerPin, LOW);	
+  delayMicroseconds(2);
+  digitalWrite(triggerPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(triggerPin, LOW);
+  pinMode(echoPin, INPUT);
+  return pulseIn(echoPin, HIGH);
+}
+
+void setup()
+{
+  
+  pinMode(8, OUTPUT);		//wyjscie dla sygnalu PWM
+  digitalWrite(8, HIGH);	//aktywnosc silnika jest ciagla
+  pinMode(9, OUTPUT);		//wyjscie dla zasilania PRZÓD
+  pinMode(10, OUTPUT);		//wyjscie dla zasilania TYŁ
+  Serial.begin(9600);
+
+}
+
+void loop()
+{
+  // Pomiar odleglosci przez CZUJNIK
+  cm = 0.01723 * readUltrasonicDistance(7, 7);
+  // convert to inches by dividing by 2.54
+  inches = (cm / 2.54);
+  
+  //Przedstawianie wynikow odleglosci
+  Serial.print(inches);
+  Serial.print("in, ");
+  Serial.print(cm);
+  Serial.print("cm, ");	//wartosc w centymetrach
+  delay(100); // Wait for 100 millisecond(s)
+  
+  
+  
+  
+  
+  //Pozycjonowanie i regulacja
+  odleglosc = cm - pozycja;
+  Serial.print(odleglosc);
+  Serial.println(" to odleglosc.");
+  if(odleglosc > 0)
+  {
+    analogWrite(8, 255);
+    digitalWrite(9, HIGH);	//jazda silnikiem do przodu
+    pozycja += 1;
+    Serial.print(odleglosc);
+    digitalWrite(10, LOW);
+  }
+  else if(odleglosc < 0)
+  {
+    analogWrite(8, -255);
+    digitalWrite(10, HIGH);	//jazda silnikiem do tylu
+    pozycja -= 1;
+    Serial.print(odleglosc);
+    digitalWrite(9, HIGH);
+  }
+  else
+  {
+    Serial.println("Na miejscu!");
+    digitalWrite(9, LOW);
+    digitalWrite(10, LOW);
+  }
+  
+}
